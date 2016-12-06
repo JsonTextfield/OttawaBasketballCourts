@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Ottawa Basketball Courts</string>
+    <string name="title_activity_maps">Ball Courts</string>
+    <string name="basketball_courts">Basketball Courts</string>
+    <string name="court_types">Court Types</string>
+    <array name="types">
+        <item>Full</item>
+        <item>Half</item>
+    </array>
+</resources>
