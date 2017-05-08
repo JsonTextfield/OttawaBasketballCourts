@@ -27,6 +27,8 @@ import com.textfield.json.ottawabasketballcourts.util.DB;
 
 import java.util.ArrayList;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private boolean[] courtTypes = {true, true};
 
@@ -37,13 +39,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         getSupportActionBar().setTitle(R.string.basketball_courts);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
+
+
     }
 
 
@@ -103,16 +107,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
-        GoogleMap mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
-        mMap.clear();
 
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Location myself = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        LatLng me = new LatLng(myself.getLatitude(), myself.getLongitude());
+        LatLng me;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            Location myself = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(myself == null){
+                myself = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
+            try {
+                me = new LatLng(myself.getLatitude(), myself.getLongitude());
+            } catch (NullPointerException x) {
+                me = new LatLng(45.38, -75.69);
+            }
+        } else {
+            me = new LatLng(45.38, -75.69);
+        }
+        googleMap.clear();
 
         DB db = new DB(this);
         db.createDatabase();
@@ -124,9 +139,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     cursor.getDouble(cursor.getColumnIndex("latitude")),
                     cursor.getDouble(cursor.getColumnIndex("longitude")), cursor.getInt(cursor.getColumnIndex("id")));
             if (c.getType().equals("full")) {
-                full.add(mMap.addMarker(new MarkerOptions().position(c.getLocation()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)).title(String.format("%s - %s", c.getName(), c.getType()))));
+                full.add(googleMap.addMarker(new MarkerOptions().position(c.getLocation()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)).title(String.format("%s - %s", c.getName(), c.getType()))));
             } else {
-                half.add(mMap.addMarker(new MarkerOptions().position(c.getLocation()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)).title(String.format("%s - %s", c.getName(), c.getType()))));
+                half.add(googleMap.addMarker(new MarkerOptions().position(c.getLocation()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)).title(String.format("%s - %s", c.getName(), c.getType()))));
             }
         }
         while (cursor.moveToNext());
@@ -136,7 +151,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .zoom(13)        // Sets the zoom
                 .bearing(-30)    // Sets the orientation of the camera to east
                 .build();
-        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
     }
 
