@@ -105,8 +105,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     public void loadMarkers(final GoogleMap googleMap, String type) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        int padding = 10; // offset from edges of the map in pixels
+        int padding = 50; // offset from edges of the map in pixels
 
+        for (Marker m : markers) {
+            m.setVisible(true);
+            //builder.include(m.getPosition());
+        }
         if (type.equals("all")) {
             for (Marker m : markers) {
                 m.setVisible(true);
@@ -167,13 +171,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         segmented.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId) {
-                    case R.id.full:
-                        loadMarkers(googleMap, "full");
-                    case R.id.all:
-                        loadMarkers(googleMap, "all");
-                    case R.id.half:
-                        loadMarkers(googleMap, "half");
+                if (checkedId == R.id.full) {
+                    loadMarkers(googleMap, "full");
+                }
+                if (checkedId == R.id.half) {
+                    loadMarkers(googleMap, "half");
+                }
+                if (checkedId == R.id.all) {
+                    loadMarkers(googleMap, "all");
                 }
             }
         });
