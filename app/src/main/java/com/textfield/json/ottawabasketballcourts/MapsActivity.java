@@ -7,8 +7,6 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.RadioGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -17,7 +15,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -37,7 +34,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        getSupportActionBar().setTitle(R.string.basketball_courts);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -46,52 +42,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_maps, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.filter) {
-            String[] items = getResources().getStringArray(R.array.types);
-            AlertDialog dialog = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                    .setTitle(getResources().getString(R.string.court_types))
-                    .setMultiChoiceItems(items, courtTypes, new DialogInterface.OnMultiChoiceClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int indexSelected, boolean isChecked) {
-
-                            if (indexSelected == 0) {
-                                for (Marker marker : full) {
-                                    marker.setVisible(isChecked);
-                                }
-                            } else {
-                                for (Marker marker : half) {
-                                    marker.setVisible(isChecked);
-                                }
-                            }
-                            courtTypes[indexSelected] = isChecked;
-                        }
-                    }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                        }
-                    }).create();
-            dialog.show();
-            return true;
-        }*/
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**

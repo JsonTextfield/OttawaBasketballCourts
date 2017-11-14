@@ -11,13 +11,11 @@ import java.io.IOException;
 public class DB {
     protected static final String TAG = "DataAdapter";
 
-    private final Context mContext;
     private SQLiteDatabase mDb;
     private DBHelper mDbHelper;
 
     public DB(Context context) {
-        this.mContext = context;
-        mDbHelper = new DBHelper(mContext);
+        mDbHelper = new DBHelper(context);
     }
 
     public DB createDatabase() throws SQLException {

@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">Terrains de Basket d\'Ottawa</string>
-    <string name="title_activity_maps">Terrains</string>
-    <string name="basketball_courts">Terrains de Basket</string>
+    <string name="app_name">Terrains de Basket</string>
     <string name="court_types">Types de Terrains</string>
     <array name="types">
         <item>Entier</item>
