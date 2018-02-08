@@ -27,7 +27,7 @@
             style="@style/RadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Full" />
+            android:text="@string/full" />
 
         <RadioButton
             android:id="@+id/all"
@@ -35,14 +35,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="All" />
+            android:text="@string/all" />
 
         <RadioButton
             android:id="@+id/half"
             style="@style/RadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Half" />
+            android:text="@string/half" />
     </info.hoang8f.android.segmented.SegmentedGroup>
 
 </RelativeLayout>

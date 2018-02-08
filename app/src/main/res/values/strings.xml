@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">BallCourts</string>
     <string name="court_types">Court Types</string>
+    <string name="full">Full</string>
+    <string name="all">All</string>
+    <string name="half">Half</string>
     <array name="types">
         <item>Full</item>
         <item>Half</item>
