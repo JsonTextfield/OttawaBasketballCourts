@@ -47,9 +47,6 @@ public class DB {
     public Cursor runQuery(String sql) {
         System.out.println(sql);
         try {
-            //String sql ="select routenum from routes order by route_id*1 asc;";
-            //String sql ="select name from stops group by name;";
-            //String sql ="select routenum,name,direction from busroutes natural join stops natural join routes group by stop_id,routenum,direction;";
 
             Cursor mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
