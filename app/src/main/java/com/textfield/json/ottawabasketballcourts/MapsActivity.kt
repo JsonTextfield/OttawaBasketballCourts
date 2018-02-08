@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.textfield.json.ottawabasketballcourts.util.DB
 import info.hoang8f.android.segmented.SegmentedGroup
-import java.util.ArrayList
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var markers = ArrayList<Marker>()
@@ -55,7 +55,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 builder.include(m.position)
             }
         } else {
-            for (i in 0 .. courts.size) {
+            for (i in 0 until courts.size) {
                 if (courts[i].type == type) {
                     markers[i].isVisible = true
                     builder.include(markers[i].position)
