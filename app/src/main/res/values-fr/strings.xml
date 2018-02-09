@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Terrains de Basket</string>
     <string name="court_types">Types de Terrains</string>
+    <string name="full">Entier</string>
+    <string name="all">Tout</string>
+    <string name="half">Demi</string>
     <array name="types">
         <item>Entier</item>
         <item>Demi</item>
