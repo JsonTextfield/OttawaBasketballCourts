@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -22,7 +21,6 @@ public class DB {
         try {
             mDbHelper.createDataBase();
         } catch (IOException mIOException) {
-            Log.e(TAG, mIOException.toString() + "  UnableToCreateDatabase");
             throw new Error("UnableToCreateDatabase");
         }
         return this;
@@ -34,7 +32,6 @@ public class DB {
             mDbHelper.close();
             mDb = mDbHelper.getReadableDatabase();
         } catch (SQLException mSQLException) {
-            Log.e(TAG, "open >>" + mSQLException.toString());
             throw mSQLException;
         }
         return this;
@@ -54,7 +51,6 @@ public class DB {
             }
             return mCur;
         } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>" + mSQLException.toString());
             throw mSQLException;
         }
     }
