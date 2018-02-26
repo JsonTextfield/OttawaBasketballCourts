@@ -15,8 +15,8 @@ import info.hoang8f.android.segmented.SegmentedGroup
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-    private var markers = ArrayList<Marker>()
-    private var courts = ArrayList<Court>()
+    private val markers = ArrayList<Marker>()
+    private val courts = ArrayList<Court>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +25,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
-        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
-        }*/
         mapFragment.getMapAsync(this)
     }
 
@@ -42,30 +39,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     private fun loadMarkers(googleMap: GoogleMap, type: String) {
         val builder = LatLngBounds.Builder()
-        val padding = 50 // offset from edges of the map in pixels
 
-        for (m in markers) {
-            m.isVisible = true
-            //builder.include(m.getPosition());
-        }
-        if (type == "all") {
-            for (m in markers) {
-                m.isVisible = true
-                builder.include(m.position)
-            }
-        } else {
-            for (i in 0 until courts.size) {
-                if (courts[i].type == type) {
-                    markers[i].isVisible = true
-                    builder.include(markers[i].position)
-                } else {
-                    markers[i].isVisible = false
-                }
+        for (i in 0 until courts.size){
+            if (courts[i].type == type || type == "all") {
+                markers[i].isVisible = true
+                builder.include(markers[i].position)
+            } else{
+                markers[i].isVisible = false
             }
         }
-        val bounds = builder.build()
-        val cu = CameraUpdateFactory.newLatLngBounds(bounds, padding)
-        googleMap.setOnMapLoadedCallback { googleMap.animateCamera(cu) }
+
+        googleMap.setOnMapLoadedCallback {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 50))
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -78,12 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         db.open()
         val cursor = db.runQuery("select * from courts;")
         do {
-            val c = Court(cursor!!.getString(cursor.getColumnIndex("courttype")),
-                    cursor.getString(cursor.getColumnIndex("name")),
-                    cursor.getDouble(cursor.getColumnIndex("latitude")),
-                    cursor.getDouble(cursor.getColumnIndex("longitude")),
-                    cursor.getInt(cursor.getColumnIndex("id")))
-
+            val c = Court(cursor)
             courts.add(c)
             val marker = googleMap.addMarker(MarkerOptions().position(c.location)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
@@ -95,7 +76,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val segmented = findViewById(R.id.segmented) as SegmentedGroup
         segmented.setOnCheckedChangeListener { group, checkedId ->
-            when(checkedId){
+            when (checkedId) {
                 R.id.full -> loadMarkers(googleMap, "full")
                 R.id.half -> loadMarkers(googleMap, "half")
                 R.id.all -> loadMarkers(googleMap, "all")
