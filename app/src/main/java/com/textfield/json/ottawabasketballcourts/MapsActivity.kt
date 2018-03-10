@@ -48,7 +48,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 markers[i].isVisible = false
             }
         }
-
         googleMap.setOnMapLoadedCallback { googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 50)) }
     }
 
@@ -70,8 +69,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val segmented = findViewById<SegmentedGroup>(R.id.segmented)
         segmented.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
-                R.id.full -> loadMarkers(googleMap, "full")
-                R.id.half -> loadMarkers(googleMap, "half")
+                R.id.full -> loadMarkers(googleMap, "Full / Entier")
+                R.id.half -> loadMarkers(googleMap, "Half / Demi")
                 R.id.all -> loadMarkers(googleMap, "all")
             }
         }
