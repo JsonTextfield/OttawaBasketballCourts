@@ -15,6 +15,7 @@ import info.hoang8f.android.segmented.SegmentedGroup
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+
     private val markers = ArrayList<Marker>()
     private val courts = ArrayList<Court>()
 
@@ -24,7 +25,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-
         mapFragment.getMapAsync(this)
     }
 
@@ -40,41 +40,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadMarkers(googleMap: GoogleMap, type: String) {
         val builder = LatLngBounds.Builder()
 
-        for (i in 0 until courts.size){
+        for (i in 0 until courts.size) {
             if (courts[i].type == type || type == "all") {
                 markers[i].isVisible = true
                 builder.include(markers[i].position)
-            } else{
+            } else {
                 markers[i].isVisible = false
             }
         }
 
-        googleMap.setOnMapLoadedCallback {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 50))
-        }
+        googleMap.setOnMapLoadedCallback { googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 50)) }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-
-        googleMap.clear()
-
         val db = DB(this@MapsActivity)
 
-        db.createDatabase()
-        db.open()
+        db.createDatabase().open()
         val cursor = db.runQuery("select * from courts;")
         do {
             val c = Court(cursor)
             courts.add(c)
             val marker = googleMap.addMarker(MarkerOptions().position(c.location)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
-                    .title(String.format("%s (%s)", c.name, c.type)))
-            marker.tag = c
+                    .title(String.format("%s (%s)", c, c.type)))
             markers.add(marker)
         } while (cursor!!.moveToNext())
         db.close()
 
-        val segmented = findViewById(R.id.segmented) as SegmentedGroup
+        val segmented = findViewById<SegmentedGroup>(R.id.segmented)
         segmented.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.full -> loadMarkers(googleMap, "full")
@@ -84,5 +77,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         loadMarkers(googleMap, "all")
     }
-
 }
