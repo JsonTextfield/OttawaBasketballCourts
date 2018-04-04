@@ -53,7 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         do {
             val c = Court(cursor)
             courts.add(c)
-            
+
             val type = if (c.type == 1) resources.getString(R.string.full) else resources.getString(R.string.half)
             val marker = googleMap.addMarker(MarkerOptions().position(c.location)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
