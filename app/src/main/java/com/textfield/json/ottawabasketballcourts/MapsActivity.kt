@@ -30,11 +30,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    private fun loadMarkers(googleMap: GoogleMap, type: String) {
+    private fun loadMarkers(googleMap: GoogleMap, type: Int) {
         val builder = LatLngBounds.Builder()
 
         for (i in 0 until courts.size) {
-            if (courts[i].type == type || type == "all") {
+            if (courts[i].type == type || type == 2) {
                 markers[i].isVisible = true
                 builder.include(markers[i].position)
             } else {
@@ -53,9 +53,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         do {
             val c = Court(cursor)
             courts.add(c)
+            
+            val type = if (c.type == 1) resources.getString(R.string.full) else resources.getString(R.string.half)
             val marker = googleMap.addMarker(MarkerOptions().position(c.location)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
-                    .title(String.format("%s (%s)", c, c.type)))
+                    .title(String.format("%s (%s)", c, type)))
+
             markers.add(marker)
         } while (cursor.moveToNext())
         db.close()
@@ -63,11 +66,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val segmented = findViewById<SegmentedGroup>(R.id.segmented)
         segmented.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
-                R.id.full -> loadMarkers(googleMap, "Full / Entier")
-                R.id.half -> loadMarkers(googleMap, "Half / Demi")
-                R.id.all -> loadMarkers(googleMap, "all")
+                R.id.half -> loadMarkers(googleMap, 0)
+                R.id.full -> loadMarkers(googleMap, 1)
+                R.id.all -> loadMarkers(googleMap, 2)
             }
         }
-        loadMarkers(googleMap, "all")
+        loadMarkers(googleMap, 2)
     }
 }
