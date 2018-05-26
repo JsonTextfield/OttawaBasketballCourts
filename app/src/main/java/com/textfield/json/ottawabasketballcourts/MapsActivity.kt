@@ -33,12 +33,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadMarkers(googleMap: GoogleMap, type: Int) {
         val builder = LatLngBounds.Builder()
 
-        for (i in 0 until courts.size) {
-            if (courts[i].type == type || type == 2) {
-                markers[i].isVisible = true
-                builder.include(markers[i].position)
+        for (marker in markers) {
+            if ((marker.tag as Court).type == type || type == 2) {
+                marker.isVisible = true
+                builder.include(marker.position)
             } else {
-                markers[i].isVisible = false
+                marker.isVisible = false
             }
         }
         val latLngBounds = builder.build()
@@ -57,7 +57,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val type = if (c.type == 1) resources.getString(R.string.full) else resources.getString(R.string.half)
             val marker = googleMap.addMarker(MarkerOptions().position(c.location)
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
-                    .title(String.format("%s (%s)", c, type)))
+                    .title("$c ($type)"))
+            marker.tag = c
 
             markers.add(marker)
         } while (cursor.moveToNext())

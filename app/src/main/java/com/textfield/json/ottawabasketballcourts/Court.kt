@@ -13,10 +13,6 @@ class Court(cursor: Cursor) {
     val location: LatLng = LatLng(cursor.getDouble(cursor.getColumnIndex("latitude")), cursor.getDouble(cursor.getColumnIndex("longitude")))
 
     override fun toString(): String {
-
-        if (Locale.getDefault().displayLanguage.contains("fr")) {
-            return nameFr
-        }
-        return name
+        return if (Locale.getDefault().displayLanguage.contains("fr")) nameFr else name
     }
 }
