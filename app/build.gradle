@@ -36,7 +36,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
