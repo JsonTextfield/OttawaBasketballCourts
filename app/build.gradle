@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-android-extensions'
 android {
     signingConfigs {
         config {
             keyAlias 'key0'
             keyPassword 'bromfield'
-            storeFile file('C:/Users/Jason/.android/test.keystore')
+            storeFile file('C:/Users/Jason/.android/debug.keystore')
             storePassword 'password'
         }
     }

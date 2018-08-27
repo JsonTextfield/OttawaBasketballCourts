@@ -6,17 +6,12 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.textfield.json.ottawabasketballcourts.util.DB
 import info.hoang8f.android.segmented.SegmentedGroup
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-
-    private val markers = ArrayList<Marker>()
     private val courts = ArrayList<Court>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,12 +28,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun loadMarkers(googleMap: GoogleMap, type: Int) {
         val builder = LatLngBounds.Builder()
 
-        for (marker in markers) {
-            if ((marker.tag as Court).type == type || type == 2) {
-                marker.isVisible = true
-                builder.include(marker.position)
-            } else {
-                marker.isVisible = false
+        for (court in courts) {
+            court.marker.isVisible = (court.type == type || type == 2)
+            if (court.marker.isVisible){
+                builder.include(court.marker.position)
             }
         }
         val latLngBounds = builder.build()
@@ -51,21 +44,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         db.open()
         val cursor = db.runQuery("select * from courts;")!!
         do {
-            val c = Court(cursor)
+            val c = Court(this, cursor, googleMap)
             courts.add(c)
-
-            val type = if (c.type == 1) resources.getString(R.string.full) else resources.getString(R.string.half)
-            val marker = googleMap.addMarker(MarkerOptions().position(c.location)
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher))
-                    .title("$c ($type)"))
-            marker.tag = c
-
-            markers.add(marker)
         } while (cursor.moveToNext())
         db.close()
 
-        val segmented = findViewById<SegmentedGroup>(R.id.segmented)
-        segmented.setOnCheckedChangeListener { group, checkedId ->
+        findViewById<SegmentedGroup>(R.id.segmented).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.half -> loadMarkers(googleMap, 0)
                 R.id.full -> loadMarkers(googleMap, 1)
